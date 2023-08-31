@@ -92,7 +92,7 @@ $(document).ready(function(){
            <title>{argv[1]}</title>
         </head>
         <body><pre><code>
-            {document}
+{document}
             </code></pre>
             {JS}
         </body>
