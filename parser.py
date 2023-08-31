@@ -56,6 +56,11 @@ if len(argv) == 2:
 """
 
         css = """<style>
+  span{
+    color:#3366ff;
+    cursor: help;
+  }
+
   /* Popover */
   .popover {
     border: 2px dotted red;
