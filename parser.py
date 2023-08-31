@@ -17,14 +17,21 @@ if len(argv) == 2:
             exit(1)
 
 
+        #Now commentaries can be retrieved from a list, let's remove them from the document's body
         for x in commentaries:
             if x != "":
-                # document=document.replace(x, f"<h1>{x.replace('##', '')}</h1>")
                 document=document.replace(x, "")
+
+        #Let's trim it a bit!
+        # trimmed = ""
+        # for z in document.split("\n"):
+        #     trimmed += f"{z.strip()}\n"
+
+        # document = trimmed
 
         for i, tuto in enumerate(tutorials):
             if tuto != "" and commentaries[i] != "":
-                document=document.replace(tuto, f"""<span data-toggle="popover" title="hint" data-content="{commentaries[i].replace('##', '')}">{tuto}</span>""")
+                document=document.replace(tuto, f"""<span data-toggle="popover" title="hint" data-content="{commentaries[i].replace('##', '')}">{tuto.strip()}</span>""")
 
 
         # for y in tutorials:
