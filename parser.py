@@ -8,41 +8,53 @@ if len(argv) == 2:
 
         commentary = "##.*"
         tutorial   = ".+(?=##)"    #.+(?= \/\/)
+        link       = "\bhttps?://\S+\b"
+        javacode   = "\*\*\*.*\n"
 
         commentaries = findall(commentary, document)
-        tutorials = findall(tutorial, document)
+        tutorials    = findall(tutorial, document)
+        links        = findall(link, document)
+        javacodes    = findall(javacode, document)
 
         if len(commentaries) != len(tutorials):
             print("Error: commentaries and tutorials aren't the same length!")
             exit(1)
 
+        # document=document.replace("<", "&lt;")
+        # document=document.replace(">", "&gt;")
 
-        #Now commentaries can be retrieved from a list, let's remove them from the document's body
+        # document=document.replace("<", "LESSTHAN")
+        # document=document.replace(">", "MORETHAN")
+
+        #adding hyperlinks!
+        for l in links:
+            if l != "":
+                document=document.replace(l, f"""<a href="{l}">{l}</a>""")
+
+        """ <a href="https://www.w3schools.com">Visit W3Schools.com!</a> """
+
+        #adding color to java-code!
+        for j in javacodes:
+            if j != "":
+                document=document.replace(j, f"""<code class="javacode">{j.strip("***").replace("<", "&lt;").replace(">", "&gt;")}</code>""")
+
+
+        #Now that commentaries can be retrieved from a list, let's remove them from the document's body
         for x in commentaries:
             if x != "":
                 document=document.replace(x, "")
 
-        #Let's trim it a bit!
-        # trimmed = ""
-        # for z in document.split("\n"):
-        #     trimmed += f"{z.strip()}\n"
-
-        # document = trimmed
 
         for i, tuto in enumerate(tutorials):
             if tuto != "" and commentaries[i] != "":
-                document=document.replace(tuto, f"""<span data-toggle="popover" title="hint" data-content="{commentaries[i].replace('##', '')}">{tuto.strip()}</span>""")
+                document=document.replace(tuto, f"""<span class="commented" data-toggle="popover"    data-content="{commentaries[i].replace('##', '')}">{tuto.strip()}</span>""")
 
 
-        # for y in tutorials:
-        #     if y != "": #prevent what seems as an infinite loop!
-        #         # document=document.replace(y, f"<h2>{y}</h2>")
-        #         document=document.replace(y, f"<h2>{y}</h2>")
+        # document=document.replace("<", "&lt;")
+        # document=document.replace(">", "&gt;")
 
-        # for x in commentaries:
-        #     if x != "":
-        #         # document=document.replace(x, f"<h1>{x.replace('##', '')}</h1>")
-        #         document=document.replace(x, f"<h1>{x.replace('##', '')}</h1>")
+        # document=document.replace("LESSTHAN", "&lt;")
+        # document=document.replace("MORETHAN", "&gt;")
         """
           <span  data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</span>
         """
@@ -57,13 +69,35 @@ if len(argv) == 2:
 
         css = """<style>
   span{
-    color:#3366ff;
+    color:#82b74b;
+  }
+
+  pre{
+    color:#fff;
+    background:#3e4444;
+    white-space: pre-wrap;
+  }
+
+  .commented{
+    width:fit-content;
+    text-shadow: .1px .1px black;
+  }
+
+  .javacode{
+    color: pink;
+
+  }
+
+  .commented:hover{
+    background-color:#82b74b;
+    color:black;
     cursor: help;
   }
 
   /* Popover */
   .popover {
-    border: 2px dotted red;
+    border: 2px inset white;
+    border-radius: 25px;
   }
   /* Popover Header */
   .popover-title {
@@ -71,16 +105,19 @@ if len(argv) == 2:
     color: #FFFFFF;
     font-size: 28px;
     text-align:center;
+    border-radius: 25px;
   }
   /* Popover Body */
   .popover-content {
-    background-color: coral;
-    color: #FFFFFF;
+    color:#fff;
+    background:#405d27;
     padding: 25px;
+    width:fit-content;
+    border-radius: 25px;
   }
   /* Popover Arrow */
   .arrow {
-    border-right-color: red !important;
+    border-right-color: white !important;
   }
   </style>"""
 
@@ -106,3 +143,4 @@ $(document).ready(function(){
 
         print(template)
         # print(len(tutorials), len(commentaries))
+        # print(javacodes)

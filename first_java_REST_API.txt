@@ -27,7 +27,7 @@ Upon un-Zipping the file, a "pom.xml" will be found at the root-of-the-project.
 From the root-of-the-project>, go to the "application.properties" file located at "src/main/resources/" and include these:
 spring.datasource.url=jdbc:mysql://localhost:3306/databasename                     ##replace databasename! | Or: spring.datasource.url=jdbc:mysql://localhost:3306/databasename?useSSL=false&serverTimezone=UTC
 spring.datasource.username=userNameHere                                            ##replace userNameHere!
-spring.datasource.password=enterPasswordHere                                       ##replace with user password!
+spring.datasource.password=enterPasswordHere                                       ##replace with user's password!
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver                       ##Keep the same
 spring.jpa.hibernate.ddl-auto=update                                               ##Keep the same
 
