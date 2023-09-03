@@ -71,14 +71,20 @@ if len(argv) == 2:
 """
 
         css = """<style>
+body{
+    background-color: #405d27;
+}
   span{
     color:#82b74b;
   }
 
   pre{
+    margin: 0 auto;
+    width: fit-content;
     color:#fff;
     background:#3e4444;
     white-space: pre-wrap;
+    border-style: none;
   }
 
   .commented{
