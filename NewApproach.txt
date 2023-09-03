@@ -49,106 +49,106 @@ Use this directory "src/main/java/PROJECT/" to code the following classes:
 
 
 5- Model (i.e.: Student.java):  ##Abstraction of database entry
-*** import javax.persistence.*;
-*** //indicates this class is an entry in a database. A table modeled after this schema is created automatically if it doesn't yet exist.
-*** @Entity
-*** public class Student{
-***
-***     //indicates this variable is the 'primary key' and uniquely identifies each entry
-***     @Id
-***     //indicates each primary key will be automatically generated. End-user only needs to enter the other columns (name and age).
-***     @GeneratedValue(strategy=GenerationType.IDENTITY)
-***     private long id;
-***
-***     //indicates it's a field (column) in the database.
-***     @Column
-***     private String name;
-***
-***     @Column
-***     private int age;
-***
-***     //getters and setters!
-***     public long getId(){
-***
-***         return this.id;
-***     }
-***
-***     public String getName(){
-***         return this.name;
-***     }
-***
-***     public int getAge(){
-***         return this.age;
-***     }
-***
-***     public void setId(int id){
-***         this.id = id;
-***     }
-***
-***     public void setName(String name){
-***         this.name = name;
-***     }
-***
-***     public void setAge(int age){
-***         this.age = age;
-***     }
-*** }
+JAVA*** import javax.persistence.*;
+JAVA*** //indicates this class is an entry in a database. A table modeled after this schema is created automatically if it doesn't yet exist.
+JAVA*** @Entity
+JAVA*** public class Student{
+JAVA***
+JAVA***     //indicates this variable is the 'primary key' and uniquely identifies each entry
+JAVA***     @Id
+JAVA***     //indicates each primary key will be automatically generated. End-user only needs to enter the other columns (name and age).
+JAVA***     @GeneratedValue(strategy=GenerationType.IDENTITY)
+JAVA***     private long id;
+JAVA***
+JAVA***     //indicates it's a field (column) in the database.
+JAVA***     @Column
+JAVA***     private String name;
+JAVA***
+JAVA***     @Column
+JAVA***     private int age;
+JAVA***
+JAVA***     //getters and setters!
+JAVA***     public long getId(){
+JAVA***
+JAVA***         return this.id;
+JAVA***     }
+JAVA***
+JAVA***     public String getName(){
+JAVA***         return this.name;
+JAVA***     }
+JAVA***
+JAVA***     public int getAge(){
+JAVA***         return this.age;
+JAVA***     }
+JAVA***
+JAVA***     public void setId(int id){
+JAVA***         this.id = id;
+JAVA***     }
+JAVA***
+JAVA***     public void setName(String name){
+JAVA***         this.name = name;
+JAVA***     }
+JAVA***
+JAVA***     public void setAge(int age){
+JAVA***         this.age = age;
+JAVA***     }
+JAVA*** }
 
 
 6- Repository (i.e.: Classroom.java):                                              ##Abstraction of database table
-*** import org.springframework.data.jpa.repository.JpaRepository;
-*** //i.e.: This is a repository of 'Student' objects. Each uniquely identified by a 'Long' variable (i.e.: id)
-*** public interface Classroom extends JpaRepository<Student, Long>{}
+JAVA*** import org.springframework.data.jpa.repository.JpaRepository;
+JAVA*** //i.e.: This is a repository of 'Student' objects. Each uniquely identified by a 'Long' variable (i.e.: id)
+JAVA*** public interface Classroom extends JpaRepository<Student, Long>{}
 
 7- Controller (i.e.: SchoolController.java)                                        ##What the end-user interacts with.
-*** import org.springframework.web.bind.annotation.RestController;
-*** import org.springframework.web.bind.annotation.PathVariable;
-*** import org.springframework.web.bind.annotation.RequestBody;
-*** import org.springframework.web.bind.annotation.GetMapping;
-*** import org.springframework.web.bind.annotation.PostMapping;
-*** import org.springframework.web.bind.annotation.PutMapping;
-*** import org.springframework.web.bind.annotation.DeleteMapping;
-*** import org.springframework.beans.factory.annotation.Autowired;
-*** import java.util.*;
-***
-*** @RestController
-*** public class SchoolController{
-***     @Autowired
-***     private Classroom room;  //Repository injection
-***
-***     @GetMapping(value="/")
-***     public String homeScreen(){
-***         return "Welcome!";
-***     }
-***
-***     @GetMapping(value="/students")
-***     public List<Student> getStudents(){
-***         return room.findAll();
-***     }
-***
-***     @PostMapping(value="/enroll")
-***     public String enroll(@RequestBody Student scholar){
-***         room.save(scholar);
-***         return "New student added...";
-***     }
-***
-***     @DeleteMapping(value="/remove/{id}")
-***     public String removeStudent(@PathVariable long id){
-***         Student selected = room.findById(id).get();
-***         selected.delete(selected);
-***         return "Student deleted";
-***     }
-***
-***     @PutMapping(value="/edit")
-***     public String editStudent(@PathVariable long id, @RequestBody Student scholar){
-***         Student selected = room.findById(id).get();
-***         selected.setName(scholar.getName());
-***         selected.setAge(scholar.getAge());
-***         room.save(selected);
-***         return "Student edited...";
-***     }
-***
-*** }
+JAVA*** import org.springframework.web.bind.annotation.RestController;
+JAVA*** import org.springframework.web.bind.annotation.PathVariable;
+JAVA*** import org.springframework.web.bind.annotation.RequestBody;
+JAVA*** import org.springframework.web.bind.annotation.GetMapping;
+JAVA*** import org.springframework.web.bind.annotation.PostMapping;
+JAVA*** import org.springframework.web.bind.annotation.PutMapping;
+JAVA*** import org.springframework.web.bind.annotation.DeleteMapping;
+JAVA*** import org.springframework.beans.factory.annotation.Autowired;
+JAVA*** import java.util.*;
+JAVA***
+JAVA*** @RestController
+JAVA*** public class SchoolController{
+JAVA***     @Autowired
+JAVA***     private Classroom room;  //Repository injection
+JAVA***
+JAVA***     @GetMapping(value="/")
+JAVA***     public String homeScreen(){
+JAVA***         return "Welcome!";
+JAVA***     }
+JAVA***
+JAVA***     @GetMapping(value="/students")
+JAVA***     public List<Student> getStudents(){
+JAVA***         return room.findAll();
+JAVA***     }
+JAVA***
+JAVA***     @PostMapping(value="/enroll")
+JAVA***     public String enroll(@RequestBody Student scholar){
+JAVA***         room.save(scholar);
+JAVA***         return "New student added...";
+JAVA***     }
+JAVA***
+JAVA***     @DeleteMapping(value="/remove/{id}")
+JAVA***     public String removeStudent(@PathVariable long id){
+JAVA***         Student selected = room.findById(id).get();
+JAVA***         selected.delete(selected);
+JAVA***         return "Student deleted";
+JAVA***     }
+JAVA***
+JAVA***     @PutMapping(value="/edit")
+JAVA***     public String editStudent(@PathVariable long id, @RequestBody Student scholar){
+JAVA***         Student selected = room.findById(id).get();
+JAVA***         selected.setName(scholar.getName());
+JAVA***         selected.setAge(scholar.getAge());
+JAVA***         room.save(selected);
+JAVA***         return "Student edited...";
+JAVA***     }
+JAVA***
+JAVA*** }
 
 
 8- REST-Controller is now READY! Use Postman to send GET, POST, PUT, DELETE requests.
@@ -166,54 +166,54 @@ POST     localhost:8080/enroll     Body>raw>JSON
 
 
 9-Now let's create the MVC-Controller. (i.e.: SchoolRenderer.java)                 ##Uses Thymeleaf to render html files (templates) at 'src/main/resources/templates/' (i.e.: index.html)
-*** import org.springframework.stereotype.Controller;
-*** import org.springframework.web.bind.annotation.*;
-***
-*** @Controller
-*** public class Renderer{
-***
-***     @GetMapping("/")
-***     public String showIndexPage(){
-***         return "jsform";
-***     }
-*** }
+JAVA*** import org.springframework.stereotype.Controller;
+JAVA*** import org.springframework.web.bind.annotation.*;
+JAVA***
+JAVA*** @Controller
+JAVA*** public class Renderer{
+JAVA***
+JAVA***     @GetMapping("/")
+JAVA***     public String showIndexPage(){
+JAVA***         return "jsform";
+JAVA***     }
+JAVA*** }
 
 
 10- Now it's time to implement the front-end.
 
 I'll leave the "(USER_INPUT)" retrieval up to you. What you need to know is the bread and butter; how to use the "fetch" API to send HTTP requests.
 
---GET--
-fetch("/students")
-.then(response => response.json())
-.then(data => {//i.e.: 'data' is a list of Student-Objects//})
-.catch(error => {console.log("Error: ", error)});
-
-
---POST--
-fetch("/enroll",
-{
-    method:"POST",
-    headers:{"Content-Type":"application/json"}
-    body: JSON.stringify(USER_INPUT)
-})
-.catch(error => {console.log("Error: ", error)});
-
-
---DELETE--
-fetch(`/remove/${id}`,
-{
-    method:"DELETE",
-})
-.catch(error => {console.log("Error: ", error)});
-
-
---PUT--
-fetch(`/edit/${id}`,
-{
-    method: "PUT",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify(USER_INPUT)
-})
-.catch(error => {console.log("Error: ", error)});
+JS*** //--GET--
+JS*** fetch("/students")
+JS*** .then(response => response.json())
+JS*** .then(data => {//i.e.: 'data' is a list of Student-Objects//})
+JS*** .catch(error => {console.log("Error: ", error)});
+JS***
+JS***
+JS*** //--POST--
+JS*** fetch("/enroll",
+JS*** {
+JS***     method:"POST",
+JS***     headers:{"Content-Type":"application/json"}
+JS***     body: JSON.stringify(USER_INPUT)
+JS*** })
+JS*** .catch(error => {console.log("Error: ", error)});
+JS***
+JS***
+JS*** //--DELETE--
+JS*** fetch(`/remove/${id}`,
+JS*** {
+JS***     method:"DELETE",
+JS*** })
+JS*** .catch(error => {console.log("Error: ", error)});
+JS***
+JS***
+JS*** //--PUT--
+JS*** fetch(`/edit/${id}`,
+JS*** {
+JS***     method: "PUT",
+JS***     headers: {"Content-Type":"application/json"},
+JS***     body: JSON.stringify(USER_INPUT)
+JS*** })
+JS*** .catch(error => {console.log("Error: ", error)});
 

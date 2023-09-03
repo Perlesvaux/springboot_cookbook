@@ -9,34 +9,37 @@ if len(argv) == 2:
         commentary = "##.*"
         tutorial   = ".+(?=##)"    #.+(?= \/\/)
         link       = "\bhttps?://\S+\b"
-        javacode   = "\*\*\*.*\n"
+        javacode   = "JAVA\*\*\*.*\n"
+        jscode     = "JS\*\*\*.*\n"
 
         commentaries = findall(commentary, document)
         tutorials    = findall(tutorial, document)
         links        = findall(link, document)
         javacodes    = findall(javacode, document)
+        jscodes      = findall(jscode, document)
+
 
         if len(commentaries) != len(tutorials):
             print("Error: commentaries and tutorials aren't the same length!")
             exit(1)
 
-        # document=document.replace("<", "&lt;")
-        # document=document.replace(">", "&gt;")
-
-        # document=document.replace("<", "LESSTHAN")
-        # document=document.replace(">", "MORETHAN")
 
         #adding hyperlinks!
         for l in links:
             if l != "":
                 document=document.replace(l, f"""<a href="{l}">{l}</a>""")
 
-        """ <a href="https://www.w3schools.com">Visit W3Schools.com!</a> """
 
         #adding color to java-code!
         for j in javacodes:
             if j != "":
-                document=document.replace(j, f"""<code class="javacode">{j.strip("***").replace("<", "&lt;").replace(">", "&gt;")}</code>""")
+                document=document.replace(j, f"""<code class="javacode">{j.strip("JAVA***").replace("<", "&lt;").replace(">", "&gt;")}</code>""")
+
+
+        #adding color to java-code!
+        for j in jscodes:
+            if j != "":
+                document=document.replace(j, f"""<code class="jscode">{j.strip("JS***").replace("<", "&lt;").replace(">", "&gt;")}</code>""")
 
 
         #Now that commentaries can be retrieved from a list, let's remove them from the document's body
@@ -85,6 +88,11 @@ if len(argv) == 2:
 
   .javacode{
     color: pink;
+
+  }
+
+  .jscode{
+    color: #3399ff;
 
   }
 
