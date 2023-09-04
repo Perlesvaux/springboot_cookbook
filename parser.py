@@ -53,16 +53,6 @@ if len(argv) == 2:
                 document=document.replace(tuto, f"""<span class="commented" data-toggle="popover"    data-content="{commentaries[i].replace('##', '')}">{tuto.strip()}</span>""")
 
 
-        # document=document.replace("<", "&lt;")
-        # document=document.replace(">", "&gt;")
-
-        # document=document.replace("LESSTHAN", "&lt;")
-        # document=document.replace("MORETHAN", "&gt;")
-        """
-          <span  data-toggle="popover" title="Popover Header" data-content="Some content inside the popover">Toggle popover</span>
-        """
-
-
         bootstrap = """<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">

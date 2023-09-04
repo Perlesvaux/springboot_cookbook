@@ -217,3 +217,50 @@ JS***     body: JSON.stringify(USER_INPUT)
 JS*** })
 JS*** .catch(error => {console.log("Error: ", error)});
 
+
+
+Alternatively, you can use "async" and "await" for cleaner code:
+
+JS*** //--GET--
+JS*** async function fetchItems() {
+JS***   try {
+JS***          const response = await fetch('/enrolled');
+JS***          const data = await response.json();
+JS***          //handle request
+JS***       } catch (error) {
+JS***      console.error('Error:', error);
+JS***       }
+JS*** }
+JS***
+JS***
+JS*** //--POST--
+JS***  async function addStudent() {
+JS***  try  {
+JS***      await fetch('/enroll', POSTmsg());
+JS***      //handle request
+JS***       } catch (error) {
+JS***      console.error('Error:', error);
+JS***       }
+JS*** }
+JS***
+JS*** //--DELETE--
+JS*** async function deleteStudent(each_id){
+JS***   try {
+JS***      await fetch(`/remove/${each_id}`, {method: 'DELETE'});
+JS***      //handle request
+JS***       } catch (error) {
+JS***      console.error('Error:', error);
+JS***       }
+JS*** }
+JS***
+JS***
+JS*** //--PUT--
+JS*** async function updateStudent(each_id){
+JS***    try{
+JS***      await fetch(`/modify/${each_id}`, PUTmsg());
+JS***      //handle request
+JS***       } catch (error) {
+JS***      console.error('Error:', error);
+JS***       }
+JS*** }
+
