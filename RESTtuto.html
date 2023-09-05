@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+        <head>
+           <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+           <style>
+body{
+    background-color: #405d27;
+}
+  span{
+    color:#82b74b;
+  }
+
+  pre{
+    margin: 0 auto;
+    width: fit-content;
+    color:#fff;
+    background:#3e4444;
+    white-space: pre-wrap;
+    border-style: none;
+  }
+
+  .commented{
+    width:fit-content;
+    text-shadow: .1px .1px black;
+  }
+
+  .javacode{
+    color: pink;
+
+  }
+
+  .jscode{
+    color: #3399ff;
+
+  }
+
+  .commented:hover{
+    background-color:#82b74b;
+    color:black;
+    cursor: help;
+  }
+
+  /* Popover */
+  .popover {
+    border: 2px inset white;
+    border-radius: 25px;
+  }
+  /* Popover Header */
+  .popover-title {
+    background-color: #73AD21;
+    color: #FFFFFF;
+    font-size: 28px;
+    text-align:center;
+    border-radius: 25px;
+  }
+  /* Popover Body */
+  .popover-content {
+    color:#fff;
+    background:#405d27;
+    padding: 25px;
+    width:fit-content;
+    border-radius: 25px;
+  }
+  /* Popover Arrow */
+  .arrow {
+    border-right-color: white !important;
+  }
+  </style>
+           <title>NewApproach.txt</title>
+        </head>
+        <body><pre><code>
+0- Install Java and Maven:
+<span class="commented" data-toggle="popover"    data-content="Check version with: java -version">sudo apt install default-jdk</span>
+<span class="commented" data-toggle="popover"    data-content="Check version with: mvn --version">sudo apt install maven</span>
+
+
+1- TAKE CARE OF THE DATABASE FIRST! (an empty database & an user with enough privileges {SELECT INSERT UPDATE DELETE} will be enough):
+<span class="commented" data-toggle="popover"    data-content="Installing MySQL">sudo apt install mysql-server</span>
+<span class="commented" data-toggle="popover"    data-content="Wizard to improve security.">sudo mysql_secure_installation</span>
+<span class="commented" data-toggle="popover"    data-content="If inactive: systemctl start mysql. Runs at localhost:3306">systemctl status mysql</span>
+<span class="commented" data-toggle="popover"    data-content="Enters MySQL CLI. Check from which port it's running: SHOW VARIABLES LIKE 'port';">sudo mysql</span>
+<span class="commented" data-toggle="popover"    data-content="same as:  CREATE SCHEMA schemaname; To view all databases: SHOW DATABASES;">CREATE DATABASE databasename;</span>
+<span class="commented" data-toggle="popover"    data-content="to view all users: SELECT USER, HOST from mysql.user;">CREATE USER 'username'@'localhost' IDENTIFIED BY 'enterPasswordHere';</span>
+<span class="commented" data-toggle="popover"    data-content="view all grants: SHOW GRANTS FOR 'username'@'localhost'; | note:  *.* == allDatabases.allTables">GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost';</span>
+
+<span class="commented" data-toggle="popover"    data-content="A password-prompt will ensue. For now, 'databasename' should be empty. Check with: USE databasename; SHOW TABLES;">New user can now access MySQL like this: mysql -u username -p</span>
+
+
+<span class="commented" data-toggle="popover"    data-content="Try this one out! https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.14&packaging=jar&jvmVersion=11&groupId=school&artifactId=roster&name=roster&description=Demo%20project%20for%20Spring%20Boot&packageName=school.roster&dependencies=web,data-jpa,thymeleaf,mysql">2- Create a project with https://start.spring.io/ (Springboot Initializr):</span>
+<span class="commented" data-toggle="popover"    data-content="Working with current setup: Java version: 11.0.19 | Apache Maven 3.6.3">(i.e.: Language: Java|Project: Maven|Spring Boot: 2.7.13|Packaging: Jar|Java: 11)</span>
+
+Include these dependencies:
+<span class="commented" data-toggle="popover"    data-content="Build web, including RESTful, applications using Spring MVC. Uses Apache Tomcat as the default embedded container.">Spring Web</span>
+<span class="commented" data-toggle="popover"    data-content="MySQL JDBC driver (Appears in 'pom.xml' as: 'mysql-connector-j').">MySQL Driver</span>
+<span class="commented" data-toggle="popover"    data-content="Automates creation of tables and columns.">Spring Data JPA</span>
+<span class="commented" data-toggle="popover"    data-content="Server-side Java template engine">Thymeleaf</span>
+
+Upon un-Zipping the file, a "pom.xml" will be found at the "root of the project".
+
+
+3- Editing the src/main/resources/application.properties configuration file:
+From the "root of the project", go to the "application.properties" file located at "src/main/resources/" and include these:
+<span class="commented" data-toggle="popover"    data-content="replace 'databasename'! | Or: spring.datasource.url=jdbc:mysql://localhost:3306/databasename?useSSL=false&serverTimezone=UTC">spring.datasource.url=jdbc:mysql://localhost:3306/databasename</span>
+<span class="commented" data-toggle="popover"    data-content="replace 'userNameHere'!">spring.datasource.username=userNameHere</span>
+<span class="commented" data-toggle="popover"    data-content="replace with user's password!">spring.datasource.password=enterPasswordHere</span>
+<span class="commented" data-toggle="popover"    data-content="Keep the same">spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver</span>
+<span class="commented" data-toggle="popover"    data-content="Keep the same">spring.jpa.hibernate.ddl-auto=update</span>
+
+
+4- If everything is OK, it should compile...:
+<span class="commented" data-toggle="popover"    data-content="Or: mvn clean test | mvn clean install">mvn clean package</span>
+<span class="commented" data-toggle="popover"    data-content="Or, in cases where you have a 'main' method: java -cp target/PROJECT.jar com.project.Main">java -jar target/PROJECT.jar</span>
+
+It should run on localhost:8080
+
+now let's work on the REST-API itself. it's made up of a CONTROLLER that interacts with a database through a REPOSITORY of MODELs.
+To put it simple:  "API's repository" = "database table"; "API model" = "database entry/row".
+The end user accesses the back-end through the "API's controller", which is a series of mappings of: URL end-points + functions.
+Use this directory "src/main/java/PROJECT/" to code the following classes:
+
+
+<span class="commented" data-toggle="popover"    data-content="Abstraction of database entry">5- Model (i.e.: Student.java):</span>
+<code class="javacode"> import javax.persistence.*;
+</code><code class="javacode"> //indicates this class is an entry in a database. A table modeled after this schema is created automatically if it doesn't yet exist.
+</code><code class="javacode"> @Entity
+</code><code class="javacode"> public class Student{
+</code><code class="javacode">
+</code><code class="javacode">     //indicates this variable is the 'primary key' and uniquely identifies each entry
+</code><code class="javacode">     @Id
+</code><code class="javacode">     //indicates each primary key will be automatically generated. End-user only needs to enter the other columns (name and age).
+</code><code class="javacode">     @GeneratedValue(strategy=GenerationType.IDENTITY)
+</code><code class="javacode">     private long id;
+</code><code class="javacode">
+</code><code class="javacode">     //indicates it's a field (column) in the database.
+</code><code class="javacode">     @Column
+</code><code class="javacode">     private String name;
+</code><code class="javacode">
+</code><code class="javacode">     @Column
+</code><code class="javacode">     private int age;
+</code><code class="javacode">
+</code><code class="javacode">     //getters and setters!
+</code><code class="javacode">     public long getId(){
+</code><code class="javacode">
+</code><code class="javacode">         return this.id;
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     public String getName(){
+</code><code class="javacode">         return this.name;
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     public int getAge(){
+</code><code class="javacode">         return this.age;
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     public void setId(int id){
+</code><code class="javacode">         this.id = id;
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     public void setName(String name){
+</code><code class="javacode">         this.name = name;
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     public void setAge(int age){
+</code><code class="javacode">         this.age = age;
+</code><code class="javacode">     }
+</code><code class="javacode"> }
+</code>
+
+<span class="commented" data-toggle="popover"    data-content="Abstraction of database table">6- Repository (i.e.: Classroom.java):</span>
+<code class="javacode"> import org.springframework.data.jpa.repository.JpaRepository;
+</code><code class="javacode"> //i.e.: This is a repository of 'Student' objects. Each uniquely identified by a 'Long' variable (i.e.: id)
+</code><code class="javacode"> public interface Classroom extends JpaRepository&lt;Student, Long&gt;{}
+</code>
+<span class="commented" data-toggle="popover"    data-content="What the end-user interacts with.">7- Controller (i.e.: SchoolController.java)</span>
+<code class="javacode"> import org.springframework.web.bind.annotation.RestController;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.PathVariable;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.RequestBody;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.GetMapping;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.PostMapping;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.PutMapping;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.DeleteMapping;
+</code><code class="javacode"> import org.springframework.beans.factory.annotation.Autowired;
+</code><code class="javacode"> import java.util.*;
+</code><code class="javacode">
+</code><code class="javacode"> @RestController
+</code><code class="javacode"> public class SchoolController{
+</code><code class="javacode">     @Autowired
+</code><code class="javacode">     private Classroom room;  //Repository injection
+</code><code class="javacode">
+</code><code class="javacode">     @GetMapping(value="/")
+</code><code class="javacode">     public String homeScreen(){
+</code><code class="javacode">         return "Welcome!";
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     @GetMapping(value="/students")
+</code><code class="javacode">     public List&lt;Student&gt; getStudents(){
+</code><code class="javacode">         return room.findAll();
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     @PostMapping(value="/enroll")
+</code><code class="javacode">     public String enroll(@RequestBody Student scholar){
+</code><code class="javacode">         room.save(scholar);
+</code><code class="javacode">         return "New student added...";
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     @DeleteMapping(value="/remove/{id}")
+</code><code class="javacode">     public String removeStudent(@PathVariable long id){
+</code><code class="javacode">         Student selected = room.findById(id).get();
+</code><code class="javacode">         selected.delete(selected);
+</code><code class="javacode">         return "Student deleted";
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode">     @PutMapping(value="/edit")
+</code><code class="javacode">     public String editStudent(@PathVariable long id, @RequestBody Student scholar){
+</code><code class="javacode">         Student selected = room.findById(id).get();
+</code><code class="javacode">         selected.setName(scholar.getName());
+</code><code class="javacode">         selected.setAge(scholar.getAge());
+</code><code class="javacode">         room.save(selected);
+</code><code class="javacode">         return "Student edited...";
+</code><code class="javacode">     }
+</code><code class="javacode">
+</code><code class="javacode"> }
+</code>
+
+8- REST-Controller is now READY! Use Postman to send GET, POST, PUT, DELETE requests.
+<span class="commented" data-toggle="popover"    data-content="Or: mvn clean test | mvn clean install">mvn clean package</span>
+<span class="commented" data-toggle="popover"    data-content="Or, in cases where you have a 'main' method: java -cp target/PROJECT.jar com.project.Main">java -jar target/PROJECT.jar</span>
+
+If it's up and running, go to:  localhost:8080/
+
+in postman, try:
+POST     localhost:8080/enroll     Body>raw>JSON
+{
+    "name": "John",
+    "age": 38
+}
+
+
+<span class="commented" data-toggle="popover"    data-content="Uses Thymeleaf to render html files (templates) at 'src/main/resources/templates/' (i.e.: index.html)">9-Now let's create the MVC-Controller. (i.e.: SchoolRenderer.java)</span>
+<code class="javacode"> import org.springframework.stereotype.Controller;
+</code><code class="javacode"> import org.springframework.web.bind.annotation.*;
+</code><code class="javacode">
+</code><code class="javacode"> @Controller
+</code><code class="javacode"> public class Renderer{
+</code><code class="javacode">
+</code><code class="javacode">     @GetMapping("/")
+</code><code class="javacode">     public String showIndexPage(){
+</code><code class="javacode">         return "jsform";
+</code><code class="javacode">     }
+</code><code class="javacode"> }
+</code>
+
+10- Now it's time to implement the front-end.
+
+I'll leave the "(USER_INPUT)" retrieval up to you. What you need to know is the bread and butter; how to use the "fetch" API to send HTTP requests.
+
+<code class="jscode"> //--GET--
+</code><code class="jscode"> fetch("/students")
+</code><code class="jscode"> .then(response =&gt; response.json())
+</code><code class="jscode"> .then(data =&gt; {//i.e.: 'data' is a list of Student-Objects//})
+</code><code class="jscode"> .catch(error =&gt; {console.log("Error: ", error)});
+</code><code class="jscode">
+</code><code class="jscode">
+</code><code class="jscode"> //--POST--
+</code><code class="jscode"> fetch("/enroll",
+</code><code class="jscode"> {
+</code><code class="jscode">     method:"POST",
+</code><code class="jscode">     headers:{"Content-Type":"application/json"}
+</code><code class="jscode">     body: JSON.stringify(USER_INPUT)
+</code><code class="jscode"> })
+</code><code class="jscode"> .catch(error =&gt; {console.log("Error: ", error)});
+</code><code class="jscode">
+</code><code class="jscode">
+</code><code class="jscode"> //--DELETE--
+</code><code class="jscode"> fetch(`/remove/${id}`,
+</code><code class="jscode"> {
+</code><code class="jscode">     method:"DELETE",
+</code><code class="jscode"> })
+</code><code class="jscode"> .catch(error =&gt; {console.log("Error: ", error)});
+</code><code class="jscode">
+</code><code class="jscode">
+</code><code class="jscode"> //--PUT--
+</code><code class="jscode"> fetch(`/edit/${id}`,
+</code><code class="jscode"> {
+</code><code class="jscode">     method: "PUT",
+</code><code class="jscode">     headers: {"Content-Type":"application/json"},
+</code><code class="jscode">     body: JSON.stringify(USER_INPUT)
+</code><code class="jscode"> })
+</code><code class="jscode"> .catch(error =&gt; {console.log("Error: ", error)});
+</code>
+
+
+Alternatively, you can use "async" and "await" for cleaner code:
+
+<code class="jscode"> //--GET--
+</code><code class="jscode"> async function fetchItems() {
+</code><code class="jscode">   try {
+</code><code class="jscode">          const response = await fetch('/enrolled');
+</code><code class="jscode">          const data = await response.json();
+</code><code class="jscode">          //handle request
+</code><code class="jscode">       } catch (error) {
+</code><code class="jscode">      console.error('Error:', error);
+</code><code class="jscode">       }
+</code><code class="jscode"> }
+</code><code class="jscode">
+</code><code class="jscode">
+</code><code class="jscode"> //--POST--
+</code><code class="jscode">  async function addStudent() {
+</code><code class="jscode">  try  {
+</code><code class="jscode">      await fetch('/enroll', POSTmsg());
+</code><code class="jscode">      //handle request
+</code><code class="jscode">       } catch (error) {
+</code><code class="jscode">      console.error('Error:', error);
+</code><code class="jscode">       }
+</code><code class="jscode"> }
+</code><code class="jscode">
+</code><code class="jscode"> //--DELETE--
+</code><code class="jscode"> async function deleteStudent(each_id){
+</code><code class="jscode">   try {
+</code><code class="jscode">      await fetch(`/remove/${each_id}`, {method: 'DELETE'});
+</code><code class="jscode">      //handle request
+</code><code class="jscode">       } catch (error) {
+</code><code class="jscode">      console.error('Error:', error);
+</code><code class="jscode">       }
+</code><code class="jscode"> }
+</code><code class="jscode">
+</code><code class="jscode">
+</code><code class="jscode"> //--PUT--
+</code><code class="jscode"> async function updateStudent(each_id){
+</code><code class="jscode">    try{
+</code><code class="jscode">      await fetch(`/modify/${each_id}`, PUTmsg());
+</code><code class="jscode">      //handle request
+</code><code class="jscode">       } catch (error) {
+</code><code class="jscode">      console.error('Error:', error);
+</code><code class="jscode">       }
+</code><code class="jscode"> }
+</code>
+
+            </code></pre>
+            <script>
+$(document).ready(function(){
+  $('[data-toggle="popover"]').popover();
+});
+</script>
+  
+        </body>
+        </html>
+        
