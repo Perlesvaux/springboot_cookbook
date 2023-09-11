@@ -32,7 +32,6 @@ if len(argv) == 2:
         code_tag_template    = """<code style="color:{css};">{txt}</code>"""
         comm_tag_template    = """<span class="commented" data-toggle="popover" data-content="{pop}">{txt}</span>"""
         link_tag_template    = """<a href="{pop}">{txt}</a>"""
-        # link_tag_template    = """<h1>{pop}{txt}</h1>"""
         titl_tag_template    = """<h2>{txt}</h2>"""
 
         pink = color(document, "PNK\*\*\*.*\n", "PNK***", "pink")
@@ -43,17 +42,22 @@ if len(argv) == 2:
         href = color(document, "\^\^\^.+\^\^\^"       , "^^^")
         titl = color(document, "\d+.*:")
 
-        if len(comm.matches) != len(tuto.matches):
+        if len(comm.matches) != len(tuto.matches) or len(link.matches) != len(href.matches):
             print("Error: commentaries and tutorials aren't the same length!")
             exit(1)
 
-        document = add_popover(document, link, href, link_tag_template)
+        #Removing comments and urls from body
+        document = format_code(document, comm)
         document = format_code(document, href)
+
+        #Turning markup into html tags and escaping '<' & '>'
         document = format_code(document, pink, code_tag_template)
         document = format_code(document, blue, code_tag_template)
-        document = format_code(document, comm)
-        document = add_popover(document, tuto, comm, comm_tag_template)
         document = format_code(document, titl, titl_tag_template)
+
+        #Linking two sets of data through a single html tag
+        document = add_popover(document, tuto, comm, comm_tag_template)
+        document = add_popover(document, link, href, link_tag_template)
 
 
         bootstrap = """<meta charset="utf-8">
