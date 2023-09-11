@@ -3,7 +3,8 @@ sudo apt install default-jdk    ##Check version with: java -version
 sudo apt install maven          ##Check version with: mvn --version
 
 
-1- TAKE CARE OF THE DATABASE FIRST! (an empty database & an user with enough privileges {SELECT INSERT UPDATE DELETE} will be enough):
+1- TAKE CARE OF THE DATABASE FIRST!:
+An empty database & an user with enough privileges will be enough  ##{SELECT INSERT UPDATE DELETE}
 sudo apt install mysql-server   ##Installing MySQL
 sudo mysql_secure_installation  ##Wizard to improve security.
 systemctl status mysql          ##If inactive: systemctl start mysql. Runs at localhost:3306
@@ -15,8 +16,10 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON databasename.* to 'username'@'localhost'
 New user can now access MySQL like this: mysql -u username -p                      ##A password-prompt will ensue. For now, 'databasename' should be empty. Check with: USE databasename; SHOW TABLES;
 
 
-2- Create a project with https://start.spring.io/ (Springboot Initializr):         ##Try this one out! https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.14&packaging=jar&jvmVersion=11&groupId=school&artifactId=roster&name=roster&description=Demo%20project%20for%20Spring%20Boot&packageName=school.roster&dependencies=web,data-jpa,thymeleaf,mysql
-(i.e.: Language: Java|Project: Maven|Spring Boot: 2.7.13|Packaging: Jar|Java: 11)          ##Working with current setup: Java version: 11.0.19 | Apache Maven 3.6.3
+2- Create a new maven project:
+Use the ###*Springboot Initializr###*     ^^^https://start.spring.io/^^^
+Try ###*this one###* out!    ^^^https://start.spring.io/#!type=maven-project&language=java&platformVersion=2.7.14&packaging=jar&jvmVersion=11&groupId=school&artifactId=roster&name=roster&description=Demo%20project%20for%20Spring%20Boot&packageName=school.roster&dependencies=web,data-jpa,thymeleaf,mysql^^^
+(i.e. Language: Java|Project: Maven|Spring Boot: 2.7.13|Packaging: Jar|Java: 11)          ##Working with current setup: Java version: 11.0.19 | Apache Maven 3.6.3
 
 Include these dependencies:
 Spring Web                      ##Build web, including RESTful, applications using Spring MVC. Uses Apache Tomcat as the default embedded container.
@@ -27,8 +30,10 @@ Thymeleaf                       ##Server-side Java template engine
 Upon un-Zipping the file, a "pom.xml" will be found at the "root of the project".
 
 
-3- Editing the src/main/resources/application.properties configuration file:
-From the "root of the project", go to the "application.properties" file located at "src/main/resources/" and include these:
+3- Connecting the database to the backend:
+From the "root of the project", locate this file: src/main/resources/application.properties
+Add these lines to that configuration file:
+
 spring.datasource.url=jdbc:mysql://localhost:3306/databasename                     ##replace 'databasename'! | Or: spring.datasource.url=jdbc:mysql://localhost:3306/databasename?useSSL=false&serverTimezone=UTC
 spring.datasource.username=userNameHere                                            ##replace 'userNameHere'!
 spring.datasource.password=enterPasswordHere                                       ##replace with user's password!
@@ -48,110 +53,114 @@ The end user accesses the back-end through the "API's controller", which is a se
 Use this directory "src/main/java/PROJECT/" to code the following classes:
 
 
-5- Model (i.e.: Student.java):  ##Abstraction of database entry
-JAVA*** import javax.persistence.*;
-JAVA*** //indicates this class is an entry in a database. A table modeled after this schema is created automatically if it doesn't yet exist.
-JAVA*** @Entity
-JAVA*** public class Student{
-JAVA***
-JAVA***     //indicates this variable is the 'primary key' and uniquely identifies each entry
-JAVA***     @Id
-JAVA***     //indicates each primary key will be automatically generated. End-user only needs to enter the other columns (name and age).
-JAVA***     @GeneratedValue(strategy=GenerationType.IDENTITY)
-JAVA***     private long id;
-JAVA***
-JAVA***     //indicates it's a field (column) in the database.
-JAVA***     @Column
-JAVA***     private String name;
-JAVA***
-JAVA***     @Column
-JAVA***     private int age;
-JAVA***
-JAVA***     //getters and setters!
-JAVA***     public long getId(){
-JAVA***
-JAVA***         return this.id;
-JAVA***     }
-JAVA***
-JAVA***     public String getName(){
-JAVA***         return this.name;
-JAVA***     }
-JAVA***
-JAVA***     public int getAge(){
-JAVA***         return this.age;
-JAVA***     }
-JAVA***
-JAVA***     public void setId(int id){
-JAVA***         this.id = id;
-JAVA***     }
-JAVA***
-JAVA***     public void setName(String name){
-JAVA***         this.name = name;
-JAVA***     }
-JAVA***
-JAVA***     public void setAge(int age){
-JAVA***         this.age = age;
-JAVA***     }
-JAVA*** }
+5- Model (i.e. Student.java):
+This class is an abstraction of database entry.
+PNK*** import javax.persistence.*;
+PNK*** //indicates this class is an entry in a database. A table modeled after this schema is created automatically if it doesn't yet exist.
+PNK*** @Entity
+PNK*** public class Student{
+PNK***
+PNK***     //indicates this variable is the 'primary key' and uniquely identifies each entry
+PNK***     @Id
+PNK***     //indicates each primary key will be automatically generated. End-user only needs to enter the other columns (name and age).
+PNK***     @GeneratedValue(strategy=GenerationType.IDENTITY)
+PNK***     private long id;
+PNK***
+PNK***     //indicates it's a field (column) in the database.
+PNK***     @Column
+PNK***     private String name;
+PNK***
+PNK***     @Column
+PNK***     private int age;
+PNK***
+PNK***     //getters and setters!
+PNK***     public long getId(){
+PNK***
+PNK***         return this.id;
+PNK***     }
+PNK***
+PNK***     public String getName(){
+PNK***         return this.name;
+PNK***     }
+PNK***
+PNK***     public int getAge(){
+PNK***         return this.age;
+PNK***     }
+PNK***
+PNK***     public void setId(int id){
+PNK***         this.id = id;
+PNK***     }
+PNK***
+PNK***     public void setName(String name){
+PNK***         this.name = name;
+PNK***     }
+PNK***
+PNK***     public void setAge(int age){
+PNK***         this.age = age;
+PNK***     }
+PNK*** }
 
 
-6- Repository (i.e.: Classroom.java):                                              ##Abstraction of database table
-JAVA*** import org.springframework.data.jpa.repository.JpaRepository;
-JAVA*** //i.e.: This is a repository of 'Student' objects. Each uniquely identified by a 'Long' variable (i.e.: id)
-JAVA*** public interface Classroom extends JpaRepository<Student, Long>{}
+6- Repository (i.e. Classroom.java):
+This class is an abstraction of a database table.
+PNK*** import org.springframework.data.jpa.repository.JpaRepository;
+PNK*** //i.e. This is a repository of 'Student' objects. Each uniquely identified by a 'Long' variable (i.e. id)
+PNK*** public interface Classroom extends JpaRepository<Student, Long>{}
 
-7- Controller (i.e.: SchoolController.java)                                        ##What the end-user interacts with.
-JAVA*** import org.springframework.web.bind.annotation.RestController;
-JAVA*** import org.springframework.web.bind.annotation.PathVariable;
-JAVA*** import org.springframework.web.bind.annotation.RequestBody;
-JAVA*** import org.springframework.web.bind.annotation.GetMapping;
-JAVA*** import org.springframework.web.bind.annotation.PostMapping;
-JAVA*** import org.springframework.web.bind.annotation.PutMapping;
-JAVA*** import org.springframework.web.bind.annotation.DeleteMapping;
-JAVA*** import org.springframework.beans.factory.annotation.Autowired;
-JAVA*** import java.util.*;
-JAVA***
-JAVA*** @RestController
-JAVA*** public class SchoolController{
-JAVA***     @Autowired
-JAVA***     private Classroom room;  //Repository injection
-JAVA***
-JAVA***     @GetMapping(value="/")
-JAVA***     public String homeScreen(){
-JAVA***         return "Welcome!";
-JAVA***     }
-JAVA***
-JAVA***     @GetMapping(value="/students")
-JAVA***     public List<Student> getStudents(){
-JAVA***         return room.findAll();
-JAVA***     }
-JAVA***
-JAVA***     @PostMapping(value="/enroll")
-JAVA***     public String enroll(@RequestBody Student scholar){
-JAVA***         room.save(scholar);
-JAVA***         return "New student added...";
-JAVA***     }
-JAVA***
-JAVA***     @DeleteMapping(value="/remove/{id}")
-JAVA***     public String removeStudent(@PathVariable long id){
-JAVA***         Student selected = room.findById(id).get();
-JAVA***         selected.delete(selected);
-JAVA***         return "Student deleted";
-JAVA***     }
-JAVA***
-JAVA***     @PutMapping(value="/edit")
-JAVA***     public String editStudent(@PathVariable long id, @RequestBody Student scholar){
-JAVA***         Student selected = room.findById(id).get();
-JAVA***         selected.setName(scholar.getName());
-JAVA***         selected.setAge(scholar.getAge());
-JAVA***         room.save(selected);
-JAVA***         return "Student edited...";
-JAVA***     }
-JAVA***
-JAVA*** }
+7- Controller (i.e. SchoolController.java):
+This class is what the end-user interacts with.
+PNK*** import org.springframework.web.bind.annotation.RestController;
+PNK*** import org.springframework.web.bind.annotation.PathVariable;
+PNK*** import org.springframework.web.bind.annotation.RequestBody;
+PNK*** import org.springframework.web.bind.annotation.GetMapping;
+PNK*** import org.springframework.web.bind.annotation.PostMapping;
+PNK*** import org.springframework.web.bind.annotation.PutMapping;
+PNK*** import org.springframework.web.bind.annotation.DeleteMapping;
+PNK*** import org.springframework.beans.factory.annotation.Autowired;
+PNK*** import java.util.*;
+PNK***
+PNK*** @RestController
+PNK*** public class SchoolController{
+PNK***     @Autowired
+PNK***     private Classroom room;  //Repository injection
+PNK***
+PNK***     @GetMapping(value="/")
+PNK***     public String homeScreen(){
+PNK***         return "Welcome!";
+PNK***     }
+PNK***
+PNK***     @GetMapping(value="/students")
+PNK***     public List<Student> getStudents(){
+PNK***         return room.findAll();
+PNK***     }
+PNK***
+PNK***     @PostMapping(value="/enroll")
+PNK***     public String enroll(@RequestBody Student scholar){
+PNK***         room.save(scholar);
+PNK***         return "New student added...";
+PNK***     }
+PNK***
+PNK***     @DeleteMapping(value="/remove/{id}")
+PNK***     public String removeStudent(@PathVariable long id){
+PNK***         Student selected = room.findById(id).get();
+PNK***         selected.delete(selected);
+PNK***         return "Student deleted";
+PNK***     }
+PNK***
+PNK***     @PutMapping(value="/edit")
+PNK***     public String editStudent(@PathVariable long id, @RequestBody Student scholar){
+PNK***         Student selected = room.findById(id).get();
+PNK***         selected.setName(scholar.getName());
+PNK***         selected.setAge(scholar.getAge());
+PNK***         room.save(selected);
+PNK***         return "Student edited...";
+PNK***     }
+PNK***
+PNK*** }
 
 
-8- REST-Controller is now READY! Use Postman to send GET, POST, PUT, DELETE requests.
+8- REST-Controller is now READY!:
+Use Postman to send GET, POST, PUT, DELETE requests.
 mvn clean package               ##Compile and test!
 java -jar target/PROJECT.jar    ##or: java -cp target/PROJECT.jar com.company.project.Mainclass
 
@@ -165,102 +174,103 @@ POST     localhost:8080/enroll     Body>raw>JSON
 }
 
 
-9-Now let's create the MVC-Controller. (i.e.: SchoolRenderer.java)                 ##Uses Thymeleaf to render html files (templates) at 'src/main/resources/templates/' (i.e.: index.html)
-JAVA*** import org.springframework.stereotype.Controller;
-JAVA*** import org.springframework.web.bind.annotation.*;
-JAVA***
-JAVA*** @Controller
-JAVA*** public class Renderer{
-JAVA***
-JAVA***     @GetMapping("/")
-JAVA***     public String showIndexPage(){
-JAVA***         return "jsform";
-JAVA***     }
-JAVA*** }
+9-Now let's create the MVC-Controller. (i.e. SchoolRenderer.java):
+Thymeleaf is used by this class to render templates stored at 'src/main/resources/templates/' (i.e. index.html)
+PNK*** import org.springframework.stereotype.Controller;
+PNK*** import org.springframework.web.bind.annotation.*;
+PNK***
+PNK*** @Controller
+PNK*** public class Renderer{
+PNK***
+PNK***     @GetMapping("/")
+PNK***     public String showIndexPage(){
+PNK***         return "jsform";
+PNK***     }
+PNK*** }
 
 
-10- Now it's time to implement the front-end.
+10- Now it's time to implement the front-end:
 
 I'll leave the "(USER_INPUT)" retrieval up to you. What you need to know is the bread and butter; how to use the "fetch" API to send HTTP requests.
 
-JS*** //--GET--
-JS*** fetch("/students")
-JS*** .then(response => response.json())
-JS*** .then(data => {//i.e.: 'data' is a list of Student-Objects//})
-JS*** .catch(error => {console.log("Error: ", error)});
-JS***
-JS***
-JS*** //--POST--
-JS*** fetch("/enroll",
-JS*** {
-JS***     method:"POST",
-JS***     headers:{"Content-Type":"application/json"}
-JS***     body: JSON.stringify(USER_INPUT)
-JS*** })
-JS*** .catch(error => {console.log("Error: ", error)});
-JS***
-JS***
-JS*** //--DELETE--
-JS*** fetch(`/remove/${id}`,
-JS*** {
-JS***     method:"DELETE",
-JS*** })
-JS*** .catch(error => {console.log("Error: ", error)});
-JS***
-JS***
-JS*** //--PUT--
-JS*** fetch(`/edit/${id}`,
-JS*** {
-JS***     method: "PUT",
-JS***     headers: {"Content-Type":"application/json"},
-JS***     body: JSON.stringify(USER_INPUT)
-JS*** })
-JS*** .catch(error => {console.log("Error: ", error)});
+BLU*** //--GET--
+BLU*** fetch("/students")
+BLU*** .then(response => response.json())
+BLU*** .then(data => {//i.e. 'data' is a list of Student-Objects//})
+BLU*** .catch(error => {console.log("Error: ", error)});
+BLU***
+BLU***
+BLU*** //--POST--
+BLU*** fetch("/enroll",
+BLU*** {
+BLU***     method:"POST",
+BLU***     headers:{"Content-Type":"application/json"}
+BLU***     body: JSON.stringify(USER_INPUT)
+BLU*** })
+BLU*** .catch(error => {console.log("Error: ", error)});
+BLU***
+BLU***
+BLU*** //--DELETE--
+BLU*** fetch(`/remove/${id}`,
+BLU*** {
+BLU***     method:"DELETE",
+BLU*** })
+BLU*** .catch(error => {console.log("Error: ", error)});
+BLU***
+BLU***
+BLU*** //--PUT--
+BLU*** fetch(`/edit/${id}`,
+BLU*** {
+BLU***     method: "PUT",
+BLU***     headers: {"Content-Type":"application/json"},
+BLU***     body: JSON.stringify(USER_INPUT)
+BLU*** })
+BLU*** .catch(error => {console.log("Error: ", error)});
 
 
 
 Alternatively, you can use "async" and "await" for cleaner code:
 
-JS*** //--GET--
-JS*** async function fetchItems() {
-JS***   try {
-JS***          const response = await fetch('/enrolled');
-JS***          const data = await response.json();
-JS***          //handle request
-JS***       } catch (error) {
-JS***      console.error('Error:', error);
-JS***       }
-JS*** }
-JS***
-JS***
-JS*** //--POST--
-JS***  async function addStudent() {
-JS***  try  {
-JS***      await fetch('/enroll', POSTmsg());
-JS***      //handle request
-JS***       } catch (error) {
-JS***      console.error('Error:', error);
-JS***       }
-JS*** }
-JS***
-JS*** //--DELETE--
-JS*** async function deleteStudent(each_id){
-JS***   try {
-JS***      await fetch(`/remove/${each_id}`, {method: 'DELETE'});
-JS***      //handle request
-JS***       } catch (error) {
-JS***      console.error('Error:', error);
-JS***       }
-JS*** }
-JS***
-JS***
-JS*** //--PUT--
-JS*** async function updateStudent(each_id){
-JS***    try{
-JS***      await fetch(`/modify/${each_id}`, PUTmsg());
-JS***      //handle request
-JS***       } catch (error) {
-JS***      console.error('Error:', error);
-JS***       }
-JS*** }
+BLU*** //--GET--
+BLU*** async function fetchItems() {
+BLU***   try {
+BLU***          const response = await fetch('/enrolled');
+BLU***          const data = await response.json();
+BLU***          //handle request
+BLU***       } catch (error) {
+BLU***      console.error('Error:', error);
+BLU***       }
+BLU*** }
+BLU***
+BLU***
+BLU*** //--POST--
+BLU***  async function addStudent() {
+BLU***  try  {
+BLU***      await fetch('/enroll', POSTmsg());
+BLU***      //handle request
+BLU***       } catch (error) {
+BLU***      console.error('Error:', error);
+BLU***       }
+BLU*** }
+BLU***
+BLU*** //--DELETE--
+BLU*** async function deleteStudent(each_id){
+BLU***   try {
+BLU***      await fetch(`/remove/${each_id}`, {method: 'DELETE'});
+BLU***      //handle request
+BLU***       } catch (error) {
+BLU***      console.error('Error:', error);
+BLU***       }
+BLU*** }
+BLU***
+BLU***
+BLU*** //--PUT--
+BLU*** async function updateStudent(each_id){
+BLU***    try{
+BLU***      await fetch(`/modify/${each_id}`, PUTmsg());
+BLU***      //handle request
+BLU***       } catch (error) {
+BLU***      console.error('Error:', error);
+BLU***       }
+BLU*** }
 
