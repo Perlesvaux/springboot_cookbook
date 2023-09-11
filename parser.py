@@ -8,6 +8,7 @@ def format_code(dump, color, template=""):
     return dump
 
 
+#Linking two sets of data through a single html tag
 def add_popover(dump, text, comment, template=""):
     for i, val in enumerate(text.matches):
         pop=comment.matches[i].replace(comment.markup, "")
@@ -47,17 +48,17 @@ if len(argv) == 2:
             exit(1)
 
         #Removing comments and urls from body
-        document = format_code(document, comm)
         document = format_code(document, href)
+        document = add_popover(document, link, href, link_tag_template)
+
+        document = format_code(document, comm)
+        document = add_popover(document, tuto, comm, comm_tag_template)
 
         #Turning markup into html tags and escaping '<' & '>'
         document = format_code(document, pink, code_tag_template)
         document = format_code(document, blue, code_tag_template)
         document = format_code(document, titl, titl_tag_template)
 
-        #Linking two sets of data through a single html tag
-        document = add_popover(document, tuto, comm, comm_tag_template)
-        document = add_popover(document, link, href, link_tag_template)
 
 
         bootstrap = """<meta charset="utf-8">
