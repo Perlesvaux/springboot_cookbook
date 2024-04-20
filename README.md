@@ -1,4 +1,4 @@
-# REST_API_tutorial
+# Spring Boot Cookbook | REST API tutorial
 Java back-end [tutorial](https://perlesvaux.github.io/REST_API_tutorial/) in 10 steps.
 
 ## Includes:
