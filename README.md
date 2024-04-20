@@ -1,5 +1,5 @@
 # Spring Boot Cookbook | REST API tutorial
-Java back-end [tutorial](https://perlesvaux.github.io/REST_API_tutorial/) in 10 steps.
+Java back-end [tutorial](https://perlesvaux.github.io/springboot_cookbook/) in 10 steps.
 
 ## Includes:
 - Installation of Java, Maven, MySQL.
